@@ -2,6 +2,6 @@
 <Context antiJARLocking="true" path="/coursework">
     <Resource name="jdbc/LessonDatabase" auth="Container" type="javax.sql.DataSource"
     maxActive="100" maxIdle="30" maxWait="10000"
-    username="root" password="root" driverClassName="com.mysql.jdbc.Driver"
-    url="jdbc:mysql://localhost:8889/sohnds_db"/>
+    username="root" password="Sup3rS3cret88!" driverClassName="com.mysql.jdbc.Driver"
+    url="jdbc:mysql://localhost:3306/sohnds_db"/>
 </Context>

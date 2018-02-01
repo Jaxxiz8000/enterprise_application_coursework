@@ -26,13 +26,18 @@ import javax.sql.DataSource;
  */
 public class LessonSelection  {
     
-    private HashMap<String, Lesson> chosenLessons;
+    HashMap<String, Lesson> chosenLessons;
     private int ownerID;
     
     private DataSource ds = null;
     
     private ResultSet rs = null;
     private PreparedStatement st = null;
+    
+    public LessonSelection() {
+        super();
+        chosenLessons = new HashMap<String, Lesson>();
+    }
 
     public LessonSelection(int owner) {
         
@@ -70,24 +75,24 @@ public class LessonSelection  {
                 // and add it to this collection (use 'LessonSelection.addLesson()' )
 
 
-                String queryString = ("SELECT lessons.* FROM lessons, lessons_booked WHERE lessons.lessonid = lessons_booked.lessonid AND clientid=?");
-                st = connection.prepareStatement(queryString);
-                st.setInt(1, ownerID);
-                rs = st.executeQuery(queryString);
-                while(rs.next()) {
-
-                    String description=rs.getString("description");
-                    Timestamp startDateTime=rs.getTimestamp("startDateTime");
-                    Timestamp endDateTime=rs.getTimestamp("endDateTime");
-                    Integer lessonLevel=rs.getInt("level");
-                    String lessonID=rs.getString("lessonid");
-
-                    Lesson selectedLesson = 
-                            new Lesson(description, startDateTime, 
-                                    endDateTime, lessonLevel, lessonID);
-
-                    this.addLesson(selectedLesson);
-                }
+//                String queryString = ("SELECT lessons * FROM lessons, lessons_booked WHERE lessons.lessonid = lessons_booked.lessonid AND clientid=?");
+//                st = connection.prepareStatement(queryString);
+//                st.setInt(1, ownerID);
+//                rs = st.executeQuery(queryString);
+//                while(rs.next()) {
+//
+//                    String description=rs.getString("description");
+//                    Timestamp startDateTime=rs.getTimestamp("startDateTime");
+//                    Timestamp endDateTime=rs.getTimestamp("endDateTime");
+//                    Integer lessonLevel=rs.getInt("level");
+//                    String lessonID=rs.getString("lessonid");
+//
+//                    Lesson selectedLesson = 
+//                            new Lesson(description, startDateTime, 
+//                                    endDateTime, lessonLevel, lessonID);
+//
+//                    this.addLesson(selectedLesson);
+//                }
 
             }
         
@@ -138,7 +143,7 @@ public class LessonSelection  {
     
     public HashMap getLessons() {
         
-        return this.chosenLessons;
+        return chosenLessons;
         
     }
     
@@ -161,5 +166,7 @@ public class LessonSelection  {
        
         
     }
+                    
+  
 
 }

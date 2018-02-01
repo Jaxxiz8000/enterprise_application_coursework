@@ -16,26 +16,27 @@
     <jsp:element name="html">
         <jsp:attribute name="lang">EN</jsp:attribute>
         <jsp:body>
-        
+            <jsp:include page="/navigation.jspx" />
             <h1>Lesson Timetable!</h1>
             <p>Below you will see the list of FREE lessons available to the 
                 course </p>
         
             <table border="1">
                 <tr>
-                    <th>Lesson Description</th><th>Start Date</th>
+                    <th>ID</th><th>Lesson Description</th><th>Start Date</th>
                     <th>End Date</th><th>Level</th>
                 </tr>
+                <jsp:useBean class="model.LessonTimetable" id="lessonTimetable" scope="application"/>
                 <c:forEach var="lessons" items="${lessonTimetable.lessons}">
                     <form method="POST" action="http://localhost:8084/coursework/do/chooseLesson">
                         <tr>
                             <td><c:out value="${lessons.key}"/></td>
                             <td><c:out value="${lessons.value.description}"/></td>
-                            
                             <td><c:out value="${lessons.value.startTime}" /></td>
                             <td><c:out value="${lessons.value.endTime}"/></td>
                             <td><c:out value="${lessons.value.level}"/></td>
                             <td><input type="hidden" name="lessonID" value="${lessons.key}"/></td>
+                            <td><input type="hidden" name="lessonName" value="${lessons.value.description}"/></td>
                             <td><input type="submit" value="Select Lesson"/></td>
                         </tr>
                     </form>
@@ -43,5 +44,4 @@
             </table>
         </jsp:body>
     </jsp:element>
-            <jsp:include page="footer.jspx"></jsp:include>
 </jsp:root>

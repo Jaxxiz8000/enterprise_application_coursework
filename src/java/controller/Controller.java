@@ -28,14 +28,12 @@ public class Controller extends HttpServlet {
 
    private Users users;
    private LessonTimetable availableLessons;
-   private LessonSelection selectedLesson;
+   //private LessonSelection selectedLesson;
 
     public void init() {
          users = new Users();
          availableLessons = new LessonTimetable();
-         this.getServletContext().setAttribute("lessonTimetable", availableLessons);
-         //this.getServletContext().getAttribute("selectedLesson" availableLessons);
-         // TODO Attach the lesson timetable to an appropriate scope
+         //this.getServletContext().setAttribute("lessonTimetable", availableLessons);
         
     }
     
@@ -54,8 +52,12 @@ public class Controller extends HttpServlet {
             throws ServletException, IOException {
         
         String action = request.getPathInfo();
-        RequestDispatcher dispatcher = null;
-        HttpSession session = request.getSession();
+        
+        //RequestDispatcher dispatcher = null;
+        RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/login.jsp");
+        
+        HttpSession session = request.getSession(false);
+        
         if (action.equals("/login")) {
             String user = null;
             String pwd = null;
@@ -69,44 +71,37 @@ public class Controller extends HttpServlet {
             }
 
             Integer clientID = users.isValid(user, pwd);
+            
             if (clientID == -1) {
                 dispatcher = this.getServletContext().getRequestDispatcher("/login.jsp");
                 //response.sendRedirect(request.getParameter("from"));
             }else {
-               
-                if (!session.isNew()) {
-                    session.setAttribute("user", user);
-                    session.setAttribute("clientid", clientID);
+                    session = request.getSession();
+                    LessonSelection selectedLesson = new LessonSelection(clientID);
+                    session.setAttribute("lessons", selectedLesson);
+                    dispatcher = this.getServletContext().getRequestDispatcher("/LessonTimetableView.jspx");
                 }
-                selectedLesson = new LessonSelection(clientID);
-                this.getServletContext().setAttribute("selectedLesson", selectedLesson);
-                
-                dispatcher = 
-                    this.getServletContext().getRequestDispatcher("/LessonTimetableView.jspx");
-                
-            }
-        } else {
-            session = request.getSession(false);
-            if (session == null) {
-                dispatcher = this.getServletContext().getRequestDispatcher("/login.jsp");
-            } else {
+            
+        } else if (session.getAttribute("lessons") != null) {
+            
                 if (action.equals("/chooseLesson")) {
                             
+                    Lesson lesson = this.availableLessons.getLesson(request.getParameter("lessonID"));
                     
                     //TODO check what is needed here when passing the selected lesson to chooseLesson
-                    //LessonSelection selectedLesson = new LessonSelection(clientID);
-                    selectedLesson = (LessonSelection) session.getAttribute("selectedLesson");
-                    String lessonId = request.getParameter("lessonID");
+                    LessonSelection lessons = (LessonSelection) session.getAttribute("lessons");
+                    //Integer lessonQuantity = Integer.parseInt(request.getParameter("quantity"));
+                    //Lesson previousHistoryOfItem = lessons.getLesson(lesson.getId());
+                    //String lessonId = request.getParameter("lessonID");
                     
-                    Lesson lesson = this.availableLessons.getLesson(lessonId);
-                    
-                    selectedLesson.addLesson(lesson);
-//                    if (selectedLesson.checkLessonExists(lessonId) == false) {
-//                        Lesson lesson = this.availableLessons.getLesson(lessonId);
-//                    
-//                        selectedLesson.addLesson(lesson);
-//                    
+//                    if (previousHistoryOfItem != null) {
+//                        lesson.numOfLessons(lessonQuantity + previousHistoryOfItem.getNumOfLessons());
+//                    } else {
+//                        lesson.numOfLessons(lessonQuantity);
 //                    }
+                    
+                    lessons.addLesson(lesson);
+                    session.setAttribute("lessons", lessons);
   
                     dispatcher = this.getServletContext().getRequestDispatcher("/LessonSelectionView.jspx");
                     
@@ -114,9 +109,9 @@ public class Controller extends HttpServlet {
                     dispatcher = this.getServletContext().getRequestDispatcher("/LessonSelectionView.jspx");
                 } else if (action.equals("/lessonTimetableView")) {
                     dispatcher = this.getServletContext().getRequestDispatcher("/LessonTimetableView.jspx");
+                } else if (action.equals("logout")) {
+                    session.invalidate();
                 }
-            }
-         
         }
         
         dispatcher.forward(request, response);

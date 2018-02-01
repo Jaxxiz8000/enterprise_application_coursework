@@ -16,30 +16,33 @@
     <jsp:element name="html">
         <jsp:attribute name="lang">EN</jsp:attribute>
         <jsp:body>
-        
+            <jsp:include page="/navigation.jspx" />
             <h1>Your selected lessons! Timetable!</h1>
             <p> Please see you current list of lessons, 
                 if you are happy with your choice 
                 please follow the link at the bottom of the page!</p>
+            <p>This page shows what is in <c:out value="${lessons.owner}"/>'s cart.</p>
             
-            <jsp:useBean class="model.LessonSelection" id="selectedLesson" scope="session"/>
             <table border="1">
                 <tr>
-                    <th>Lesson Description</th><th>Start Date</th>
+                    <th>ID</th><th>Lesson Description</th><th>Start Date</th>
                     <th>End Date</th><th>Level</th>
                 </tr>
-                <c:forEach var="chosenLesson" items="${selectedLesson.lessons}">
+                <c:forEach var="lesson" items="${lessons.lessons}">
                     <form>
                         <tr>
-                            <td><c:out value="${chosenLesson.value.description}"/></td>
-                            <td><c:out value="${chosenLesson.value.startTime}" /></td>
-                            <td><c:out value="${chosenLesson.value.endTime}"/></td>
-                            <td><c:out value="${chosenLesson.value.level}"/></td>
+                            <td><c:out value="${lesson.key}"/></td>
+                            <td><c:out value="${lesson.value.description}"/></td>
+                            <td><c:out value="${lesson.value.startTime}" /></td>
+                            <td><c:out value="${lesson.value.endTime}"/></td>
+                            <td><c:out value="${lesson.value.level}"/></td>
                         </tr>
                     </form>
                 </c:forEach>
+                
+                <jsp:useBean class="model.LessonSelection" id="lessons" scope="session"/>
             </table>
         </jsp:body>
     </jsp:element>
-        <jsp:include page="footer.jspx"></jsp:include>
+    <jsp:include page="footer.jspx"></jsp:include>
 </jsp:root>
