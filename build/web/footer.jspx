@@ -10,7 +10,7 @@
         <jsp:attribute name="lang">EN</jsp:attribute>
         <jsp:body>
             <p>
-            <form method="POST" action="finaliseBooking">
+            <form method="POST" action="http://localhost:8084/coursework/do/finaliseBooking">
                 <input type="submit" value="Finalise My Booking!"/>
             </form>
             </p>

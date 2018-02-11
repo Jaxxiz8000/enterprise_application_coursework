@@ -5,11 +5,10 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/desohn/Documents/CapDegree/enterprise_application/enterprise_application_coursework/src/java/model/LessonSelection.java</file>
-            <file>file:/C:/Users/desohn/Documents/CapDegree/enterprise_application/enterprise_application_coursework/src/java/model/Lesson.java</file>
             <file>file:/C:/Users/desohn/Documents/CapDegree/enterprise_application/enterprise_application_coursework/src/java/controller/Controller.java</file>
-            <file>file:/C:/Users/desohn/Documents/CapDegree/enterprise_application/enterprise_application_coursework/src/java/model/LessonTimetable.java</file>
-            <file>file:/C:/Users/desohn/Documents/CapDegree/enterprise_application/enterprise_application_coursework/web/LessonTimetableView.jspx</file>
             <file>file:/C:/Users/desohn/Documents/CapDegree/enterprise_application/enterprise_application_coursework/web/LessonSelectionView.jspx</file>
+            <file>file:/C:/Users/desohn/Documents/CapDegree/enterprise_application/enterprise_application_coursework/web/META-INF/context.xml</file>
+            <file>file:/C:/Users/desohn/Documents/CapDegree/enterprise_application/enterprise_application_coursework/web/footer.jspx</file>
         </group>
     </open-files>
 </project-private>
