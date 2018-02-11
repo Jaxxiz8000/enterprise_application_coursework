@@ -105,6 +105,10 @@ public class Controller extends HttpServlet {
   
                     dispatcher = this.getServletContext().getRequestDispatcher("/LessonSelectionView.jspx");
                     
+                } else if (action.equals("/finaliseBooking")) {
+                  LessonSelection lessons = (LessonSelection) session.getAttribute("lessons");
+                  lessons.updateBooking();
+                  dispatcher = this.getServletContext().getRequestDispatcher("/LessonSelectionView.jspx");
                 } else if (action.equals("/viewSelectedLessons")) {
                     dispatcher = this.getServletContext().getRequestDispatcher("/LessonSelectionView.jspx");
                 } else if (action.equals("/lessonTimetableView")) {

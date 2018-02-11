@@ -148,13 +148,43 @@ public class LessonSelection  {
     }
     
     public void updateBooking() {
+       
+//        // A tip: here is how you can get the ids of any lessons that are currently selected
+//        Object[] lessonKeys = chosenLessons.keySet().toArray();
+//        for (int i=0; i<lessonKeys.length; i++) {
+//                    
+//              // Temporary check to see what the current lesson ID is....
+//              System.out.println("Lesson ID is : " + (String)lessonKeys[i]);
+//        }
         
-        // A tip: here is how you can get the ids of any lessons that are currently selected
-        Object[] lessonKeys = chosenLessons.keySet().toArray();
-        for (int i=0; i<lessonKeys.length; i++) {
+                // Connect to the database - this is a pooled connection, so you don't need to close it afterwards
+        try {
+
+            Connection connection = ds.getConnection();
+
+            if (connection != null) {
+                Object[] lessonKeys = chosenLessons.keySet().toArray();
+                for (int i=0; i<lessonKeys.length; i++) {
+                
+                String lessonId = (String) lessonKeys[i];
+                // Temporary check to see what the current lesson ID is....
+                //system.out.println("Lesson ID is : " + (String)lessonKeys[i]);
+                
+                if (this.lessonExists(lessonId) == 0) {
                     
-              // Temporary check to see what the current lesson ID is....
-              System.out.println("Lesson ID is : " + (String)lessonKeys[i]);
+                    String insertQuery = ("INSERT INTO `lessons_booked`(`clientid`, `lessonid`) VALUES ("+ownerID+", '"+lessonId+"')");
+                    st = connection.prepareStatement(insertQuery);
+                    //st.setInt(1, ownerID);
+                    //st.setString(2, lessonId);
+                    st.executeUpdate(insertQuery);
+                }
+            }
+        }
+        
+        
+        }catch(SQLException e){
+
+            System.out.println("Exception is ;"+e + ": message is " + e.getMessage());
         }
       
         // TODO get a connection to the database as in the method above
@@ -165,6 +195,24 @@ public class LessonSelection  {
                     // the lesson ID into the lessonid field
        
         
+    }
+    
+    public int lessonExists(String lessonId) {
+        try {
+            Connection connection = ds.getConnection();
+            String query = "SELECT count(*) AS count from lessons_booked WHERE clientid = "+ownerID+" AND lessonid = "+lessonId+"  ";
+            st = connection.prepareStatement(query);
+            st.setInt(1, ownerID);
+            st.setString(2, lessonId);
+            rs = st.executeQuery(query);
+
+            return rs.getInt("count");
+ 
+        }catch(SQLException e){
+
+            System.out.println("Exception is ;"+e + ": message is " + e.getMessage());
+        }
+        return 0;
     }
                     
   
