@@ -25,6 +25,7 @@ public class Users {
     private ResultSet rs = null;
     private PreparedStatement pstmt = null;
     DataSource ds = null;
+    private int clientID;
    
     public Users() {
         
@@ -59,7 +60,8 @@ public class Users {
                rs = pstmt.executeQuery();
                
                if (rs.next()) {
-                   return rs.getInt("clientid");
+                   clientID = rs.getInt("clientid");
+                   return clientID;
                }else {
                    return -1;
                }
@@ -105,5 +107,9 @@ public class Users {
                
          }
         
+    }
+    
+    public int returnClientID() {
+        return clientID;
     }
 }

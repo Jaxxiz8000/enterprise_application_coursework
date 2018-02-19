@@ -5,7 +5,10 @@
 package controller;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -13,9 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.swing.JOptionPane;
+import model.BookedLessons;
 import model.Lesson;
-import model.LessonSelection;
-
 import model.LessonTimetable;
 import model.Users;
 import model.LessonSelection;
@@ -28,6 +30,8 @@ public class Controller extends HttpServlet {
 
    private Users users;
    private LessonTimetable availableLessons;
+   private BookedLessons bookedLessons;
+   private Integer clientID;
    //private LessonSelection selectedLesson;
 
     public void init() {
@@ -70,7 +74,7 @@ public class Controller extends HttpServlet {
                 pwd = request.getParameter("password");
             }
 
-            Integer clientID = users.isValid(user, pwd);
+            clientID = users.isValid(user, pwd);
             
             if (clientID == -1) {
                 dispatcher = this.getServletContext().getRequestDispatcher("/login.jsp");
@@ -78,7 +82,10 @@ public class Controller extends HttpServlet {
             }else {
                     session = request.getSession();
                     LessonSelection selectedLesson = new LessonSelection(clientID);
+                    bookedLessons = new BookedLessons(clientID);
                     session.setAttribute("lessons", selectedLesson);
+                    session.setAttribute("bookedLessons", bookedLessons);
+                    session.setAttribute("clientID", clientID);
                     dispatcher = this.getServletContext().getRequestDispatcher("/LessonTimetableView.jspx");
                 }
             
@@ -90,29 +97,46 @@ public class Controller extends HttpServlet {
                     
                     //TODO check what is needed here when passing the selected lesson to chooseLesson
                     LessonSelection lessons = (LessonSelection) session.getAttribute("lessons");
-                    //Integer lessonQuantity = Integer.parseInt(request.getParameter("quantity"));
-                    //Lesson previousHistoryOfItem = lessons.getLesson(lesson.getId());
-                    //String lessonId = request.getParameter("lessonID");
-                    
+                    BookedLessons bookedLessonsNew = (BookedLessons) session.getAttribute("bookedLessons");
 //                    if (previousHistoryOfItem != null) {
 //                        lesson.numOfLessons(lessonQuantity + previousHistoryOfItem.getNumOfLessons());
 //                    } else {
 //                        lesson.numOfLessons(lessonQuantity);
 //                    }
-                    
+                    bookedLessonsNew.setOwnerID(clientID);
                     lessons.addLesson(lesson);
                     session.setAttribute("lessons", lessons);
-  
+                    session.setAttribute("bookedLesson", bookedLessonsNew);
                     dispatcher = this.getServletContext().getRequestDispatcher("/LessonSelectionView.jspx");
                     
                 } else if (action.equals("/finaliseBooking")) {
                   LessonSelection lessons = (LessonSelection) session.getAttribute("lessons");
                   lessons.updateBooking();
-                  dispatcher = this.getServletContext().getRequestDispatcher("/LessonSelectionView.jspx");
+                  
+                    try {
+                        bookedLessons.getBookedLessons();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                   
+                  session.setAttribute("bookedLesson", bookedLessons);
+                  
+                  dispatcher = this.getServletContext().getRequestDispatcher("/LessonsBookedView.jspx");
+                  
                 } else if (action.equals("/viewSelectedLessons")) {
                     dispatcher = this.getServletContext().getRequestDispatcher("/LessonSelectionView.jspx");
                 } else if (action.equals("/lessonTimetableView")) {
                     dispatcher = this.getServletContext().getRequestDispatcher("/LessonTimetableView.jspx");
+                } else if (action.equals("/LessonsBookedView")) {
+                    try {
+                        bookedLessons.getBookedLessons();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    
+                    session.setAttribute("bookedLesson", bookedLessons);
+                    dispatcher = this.getServletContext().getRequestDispatcher("/LessonsBookedView.jspx");
+                    
                 } else if (action.equals("logout")) {
                     session.invalidate();
                 }
@@ -127,7 +151,7 @@ public class Controller extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
-    }
+        }
     
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)

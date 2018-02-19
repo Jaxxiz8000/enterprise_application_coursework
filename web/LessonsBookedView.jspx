@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+    Document   : LessonTimeTableView
+    Created on : Nov 20, 2017, 2:00:02 PM
+    Author     : deansohn
+-->
+<jsp:root xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:jsp="http://java.sun.com/JSP/Page"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:f="http://java.sun.com/jsp/jstl/fmt"
+    version="2.0">
+
+    <jsp:directive.page contentType="text/html" pageEncoding="UTF-8"/>
+
+    <!-- any content can be specified here, e.g.: -->
+    <jsp:element name="html">
+        <jsp:attribute name="lang">EN</jsp:attribute>
+        <jsp:body>
+            <jsp:include page="/navigation.jspx" />
+            <h1>Lesson Timetable!</h1>
+            <p>Below you will see the list of FREE lessons available to the 
+                course </p>
+        
+            <table border="1" id="bookedLessonTb1">
+                <tr>
+                    <th>ID</th><th>Lesson Description</th><th>Start Date</th>
+                    <th>End Date</th><th>Level</th>
+                </tr>
+                <c:forEach var="lessons" items="${bookedLessons.lessons}">
+                    <form method="POST" action="http://localhost:8084/coursework/do/BookedLessons">
+                        <tr>
+                            <td><c:out value="${lessons.key}"/></td>
+                            <td><c:out value="${lessons.value.description}"/></td>
+                            <td><c:out value="${lessons.value.startTime}" /></td>
+                            <td><c:out value="${lessons.value.endTime}"/></td>
+                            <td><c:out value="${lessons.value.level}"/></td>
+                            <td><input type="hidden" name="lessonID" value="${lessons.key}"/></td>
+                            <td><input type="hidden" name="lessonName" value="${lessons.value.description}"/></td>
+                            <td><input type="submit" value="Cancel Lesson booking"/></td>
+                        </tr>
+                    </form>
+                </c:forEach>
+                <jsp:useBean class="model.BookedLessons" id="bookedLessons" scope="application"/>
+            </table>
+            <p id="bookedLessonEmptyTxt"> You currently have no booked lessons. Please select and then booked your lessons.</p>
+        </jsp:body>
+        <script>
+            if (${bookedLessons.lessons.size() == 0 }) {
+                document.getElementById("bookedLessonTb1").style.display="none";
+                document.getElementById("bookedLessonEmptyTxt").style.display="";
+            } else {
+                document.getElementById("bookedLessonTb1").style.display="";
+                document.getElementById("bookedLessonEmptyTxt").style.display="none";
+            }
+        </script>
+    </jsp:element>
+</jsp:root>

@@ -14,7 +14,8 @@
             <p>
                 [ <a href="http://localhost:8084/coursework/do/lessonTimetableView">
                     Available Lessons</a> |<a href="http://localhost:8084/coursework/do/viewSelectedLessons"> 
-                        Selected Lessons</a> | <a href="http://localhost:8084/coursework/do/logout"> Log Out</a>  ]
+                        Selected Lessons</a> | <a href="http://localhost:8084/coursework/do/logout"> Log Out</a> | 
+                        <a href="http://localhost:8084/coursework/do/LessonsBookedView"> Booked Lessons</a>]
             </p>
         </jsp:body>
     </jsp:element>
