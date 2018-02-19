@@ -5,6 +5,7 @@
 
 package model;
 
+import static com.sun.corba.se.spi.presentation.rmi.StubAdapter.request;
 import java.util.HashMap;
 import java.util.Map;
 import java.sql.Connection;
@@ -32,6 +33,7 @@ public class LessonTimetable {
   private ResultSet rs = null;
   private Statement st = null;
   private HashMap lessons = null;
+  private HashMap bookedLessons = null;
   
   private DataSource ds = null;
     
@@ -104,5 +106,5 @@ public class LessonTimetable {
         
         return this.lessons;
         
-    }    
+    }
 }

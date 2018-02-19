@@ -21,9 +21,11 @@
             <p> Please see you current list of lessons, 
                 if you are happy with your choice 
                 please follow the link at the bottom of the page!</p>
-            <p>This page shows what is in <c:out value="${lessons.owner}"/>'s cart.</p>
+            <p>This page shows, <c:out value="${lessons.owner}"/>'s Selected lessons and current booked lessons.</p>
             
-            <table border="1">
+            
+            <p> Selected Lesson table: </p>
+            <table border="1" id="lessonSelectTbl">
                 <tr>
                     <th>ID</th><th>Lesson Description</th><th>Start Date</th>
                     <th>End Date</th><th>Level</th>
@@ -42,7 +44,53 @@
                 
                 <jsp:useBean class="model.LessonSelection" id="lessons" scope="session"/>
             </table>
+            <p id="lessonSelectEmptyTxt"> You have no lessons selected please go and select some to book lessons!</p>
+            
+            <br></br>
+                
+            <p>Booked Lesson table: </p>
+            <table border="1" id="bookedLessonTbl">
+                <tr>
+                    <th>ID</th><th>Lesson Description</th><th>Start Date</th>
+                    <th>End Date</th><th>Level</th>
+                </tr>
+                <jsp:useBean class="model.BookedLessons" id="bookedLessons" scope="application"/>
+                <c:forEach var="bLesson" items="${bookedLessons.lessons}">
+                    <form>
+                        <tr>
+                            <td><c:out value="${bLesson.key}"/></td>
+                            <td><c:out value="${bLesson.value.description}"/></td>
+                            <td><c:out value="${bLesson.value.startTime}" /></td>
+                            <td><c:out value="${bLesson.value.endTime}"/></td>
+                            <td><c:out value="${bLesson.value.level}"/></td>
+                            <td><input type="hidden" name="lessonID" value="${bLessons.key}"/></td>
+                            <td><input type="hidden" name="lessonName" value="${bLessons.value.description}"/></td>
+                            <td><input type="submit" value="Delete lesson from booking"/></td>
+                        </tr>
+                    </form>
+                </c:forEach>
+              
+            </table>
+            <p id="bookedLessonEmptyTxt"> You currently have no booked lessons. Please select and then booked your lessons.</p>
         </jsp:body>
+        <script>
+            if (${lessons.lessons.size() == 0 }) {
+                document.getElementById("lessonSelectTbl").style.display="none";
+                document.getElementById("lessonSelectEmptyTxt").style.display="";
+            } else {
+                document.getElementById("lessonSelectTbl").style.display="";
+                document.getElementById("lessonSelectEmptyTxt").style.display="none";
+            }
+        </script>
+        <script>
+            if (${bookedLessons.lessons.size() == 0 }) {
+                document.getElementById("bookedLessonTbl").style.display="none";
+                document.getElementById("bookedLessonEmptyTxt").style.display="";
+            } else {
+                document.getElementById("bookedLessonTbl").style.display="";
+                document.getElementById("bookedLessonEmptyTxt").style.display="none";
+            }              
+        </script>
     </jsp:element>
     <jsp:include page="footer.jspx"></jsp:include>
 </jsp:root>

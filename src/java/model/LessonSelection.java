@@ -27,6 +27,7 @@ import javax.sql.DataSource;
 public class LessonSelection  {
     
     HashMap<String, Lesson> chosenLessons;
+    private HashMap<String, Lesson> bookedLessons;
     private int ownerID;
     
     private DataSource ds = null;
@@ -57,50 +58,8 @@ public class LessonSelection  {
         }
         
         // Connect to the database - this is a pooled connection, so you don't need to close it afterwards
-        try {
 
-            Connection connection = ds.getConnection();
-
-            if (connection != null) {
-                
-                // TODO get the details of any lessons currently selected by this user
-                // One way to do this: create a join query which:
-                // 1. finds rows in the 'lessons_booked' table which relate to this clientid
-                // 2. links 'lessons' to 'lessons_booked' by 'lessonid
-                // 3. selects all fields from lessons for these rows
-                
-                // If you need to test your SQL syntax you can do this in virtualmin
-                
-                // For each one, instantiate a new Lesson object,
-                // and add it to this collection (use 'LessonSelection.addLesson()' )
-
-
-//                String queryString = ("SELECT lessons * FROM lessons, lessons_booked WHERE lessons.lessonid = lessons_booked.lessonid AND clientid=?");
-//                st = connection.prepareStatement(queryString);
-//                st.setInt(1, ownerID);
-//                rs = st.executeQuery(queryString);
-//                while(rs.next()) {
-//
-//                    String description=rs.getString("description");
-//                    Timestamp startDateTime=rs.getTimestamp("startDateTime");
-//                    Timestamp endDateTime=rs.getTimestamp("endDateTime");
-//                    Integer lessonLevel=rs.getInt("level");
-//                    String lessonID=rs.getString("lessonid");
-//
-//                    Lesson selectedLesson = 
-//                            new Lesson(description, startDateTime, 
-//                                    endDateTime, lessonLevel, lessonID);
-//
-//                    this.addLesson(selectedLesson);
-//                }
-
-            }
         
-        
-        }catch(Exception e){
-
-            System.out.println("Exception is ;"+e + ": message is " + e.getMessage());
-        }
         
     }
 
@@ -110,7 +69,7 @@ public class LessonSelection  {
     public Set <Entry <String, Lesson>> getItems() {
         return chosenLessons.entrySet();
     }
-
+    
     public void addLesson(Lesson l) {
        
         Lesson i = new Lesson(l);
@@ -147,17 +106,11 @@ public class LessonSelection  {
         
     }
     
+
+    
     public void updateBooking() {
-       
-//        // A tip: here is how you can get the ids of any lessons that are currently selected
-//        Object[] lessonKeys = chosenLessons.keySet().toArray();
-//        for (int i=0; i<lessonKeys.length; i++) {
-//                    
-//              // Temporary check to see what the current lesson ID is....
-//              System.out.println("Lesson ID is : " + (String)lessonKeys[i]);
-//        }
         
-                // Connect to the database - this is a pooled connection, so you don't need to close it afterwards
+        // Connect to the database - this is a pooled connection, so you don't need to close it afterwards
         try {
 
             Connection connection = ds.getConnection();
@@ -176,7 +129,12 @@ public class LessonSelection  {
                     st = connection.prepareStatement(insertQuery);
                     //st.setInt(1, ownerID);
                     //st.setString(2, lessonId);
-                    st.executeUpdate(insertQuery);
+                    int successfulUpdateCheck = st.executeUpdate(insertQuery);
+                    if(successfulUpdateCheck > 0) {            
+                        chosenLessons.clear();
+                    } else {
+                        System.out.println("failed to update booking table");
+                    }
                 }
             }
         }
@@ -186,15 +144,7 @@ public class LessonSelection  {
 
             System.out.println("Exception is ;"+e + ": message is " + e.getMessage());
         }
-      
-        // TODO get a connection to the database as in the method above
-        // TODO In the database, delete any existing lessons booked for this user in the table 'lessons_booked'
-        // REMEMBER to use executeUpdate, not executeQuery
-        // TODO - write and execute a query which, for each selected lesson, will insert into the correct table:
-                    // the owner id into the clientid field
-                    // the lesson ID into the lessonid field
-       
-        
+                
     }
     
     public int lessonExists(String lessonId) {
@@ -214,7 +164,9 @@ public class LessonSelection  {
         }
         return 0;
     }
-                    
-  
-
+    
+    public HashMap getBookedLessons() {        
+        return bookedLessons;  
+    }
+    
 }
