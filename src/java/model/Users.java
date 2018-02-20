@@ -81,7 +81,7 @@ public class Users {
     }
     
     // TODO (Optional steps 3 and 4) add a user with specified username and password
-    public void addUser(String name, String pwd) {
+    public boolean addUser(String name, String pwd) {
        
         //TODO: implement this method so that the specified username and password are inserted into the database.
 
@@ -94,17 +94,25 @@ public class Users {
                 pstmt = connection.prepareStatement("INSERT INTO clients ( username, password) VALUES (?,?)");
                 pstmt.setString(1, name);
                 pstmt.setString(2, pwd);
-
-                pstmt.executeUpdate();
-
+                
+                int i = pstmt.executeUpdate();
+                
+                if (i > 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+                
                 // todo check success
             
+            } else {
+                return false;
             }
             
          }
             catch(SQLException e) {
                 System.out.println("Exception is ;"+e + ": message is " + e.getMessage());
-               
+                return false;
          }
         
     }

@@ -106,8 +106,6 @@ public class LessonSelection  {
         
     }
     
-
-    
     public void updateBooking() {
         
         // Connect to the database - this is a pooled connection, so you don't need to close it afterwards
