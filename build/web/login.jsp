@@ -27,7 +27,7 @@
         <form method="POST" action="http://localhost:8084/coursework/do/addUser">
             <h2> Don't yet have an account? </h2>
             Username:<input type="text" name="newUsername" value="" />----
-                Password:<input type="password" name="newPassword" value="" />      
+            Password:<input type="password" name="newPassword" value="" />      
             <input type="submit" value="Sign up as a new user"/>
         </form>
         
