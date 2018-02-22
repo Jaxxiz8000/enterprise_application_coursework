@@ -58,8 +58,6 @@ public class LessonSelection  {
         }
         
         // Connect to the database - this is a pooled connection, so you don't need to close it afterwards
-
-        
         
     }
 
@@ -106,6 +104,8 @@ public class LessonSelection  {
         
     }
     
+    
+    
     public void updateBooking() {
         
         // Connect to the database - this is a pooled connection, so you don't need to close it afterwards
@@ -114,28 +114,31 @@ public class LessonSelection  {
             Connection connection = ds.getConnection();
 
             if (connection != null) {
+
+                String deleteQuery = ("DELETE FROM lessons_booked WHERE clientid = "+ownerID+"");
+                st = connection.prepareStatement(deleteQuery);
+                //st.setInt(1, ownerID);
+                st.execute();
+                
                 Object[] lessonKeys = chosenLessons.keySet().toArray();
                 for (int i=0; i<lessonKeys.length; i++) {
                 
                 String lessonId = (String) lessonKeys[i];
                 // Temporary check to see what the current lesson ID is....
                 //system.out.println("Lesson ID is : " + (String)lessonKeys[i]);
-                
-                if (this.lessonExists(lessonId) == 0) {
-                    
-                    String insertQuery = ("INSERT INTO `lessons_booked`(`clientid`, `lessonid`) VALUES ("+ownerID+", '"+lessonId+"')");
-                    st = connection.prepareStatement(insertQuery);
-                    //st.setInt(1, ownerID);
-                    //st.setString(2, lessonId);
-                    int successfulUpdateCheck = st.executeUpdate(insertQuery);
-                    if(successfulUpdateCheck > 0) {            
-                        chosenLessons.clear();
+                                   
+                String insertQuery = ("INSERT INTO `lessons_booked`(`clientid`, `lessonid`) VALUES ("+ownerID+", '"+lessonId+"')");
+                st = connection.prepareStatement(insertQuery);
+                //st.setInt(1, ownerID);
+                //st.setString(2, lessonId);
+                int successfulUpdateCheck = st.executeUpdate(insertQuery);
+                if(successfulUpdateCheck > 0) {            
+                    chosenLessons.clear();
                     } else {
                         System.out.println("failed to update booking table");
                     }
                 }
-            }
-        }
+    }
         
         
         }catch(SQLException e){
@@ -166,5 +169,44 @@ public class LessonSelection  {
     public HashMap getBookedLessons() {        
         return bookedLessons;  
     }
+    
+//  public void updateBooking() {
+//        
+//        // Connect to the database - this is a pooled connection, so you don't need to close it afterwards
+//        try {
+//
+//            Connection connection = ds.getConnection();
+//
+//            if (connection != null) {
+//                Object[] lessonKeys = chosenLessons.keySet().toArray();
+//                for (int i=0; i<lessonKeys.length; i++) {
+//                
+//                String lessonId = (String) lessonKeys[i];
+//                // Temporary check to see what the current lesson ID is....
+//                //system.out.println("Lesson ID is : " + (String)lessonKeys[i]);
+//                
+//                if (this.lessonExists(lessonId) == 0) {
+//                    
+//                    String insertQuery = ("INSERT INTO `lessons_booked`(`clientid`, `lessonid`) VALUES ("+ownerID+", '"+lessonId+"')");
+//                    st = connection.prepareStatement(insertQuery);
+//                    //st.setInt(1, ownerID);
+//                    //st.setString(2, lessonId);
+//                    int successfulUpdateCheck = st.executeUpdate(insertQuery);
+//                    if(successfulUpdateCheck > 0) {            
+//                        chosenLessons.clear();
+//                    } else {
+//                        System.out.println("failed to update booking table");
+//                    }
+//                }
+//            }
+//        }
+//        
+//        
+//        }catch(SQLException e){
+//
+//            System.out.println("Exception is ;"+e + ": message is " + e.getMessage());
+//        }
+//                
+//    }
     
 }

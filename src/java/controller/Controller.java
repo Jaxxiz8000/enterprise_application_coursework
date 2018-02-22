@@ -128,11 +128,7 @@ public class Controller extends HttpServlet {
                     //TODO check what is needed here when passing the selected lesson to chooseLesson
                     LessonSelection lessons = (LessonSelection) session.getAttribute("lessons");
                     BookedLessons bookedLessonsNew = (BookedLessons) session.getAttribute("bookedLessons");
-//                    if (previousHistoryOfItem != null) {
-//                        lesson.numOfLessons(lessonQuantity + previousHistoryOfItem.getNumOfLessons());
-//                    } else {
-//                        lesson.numOfLessons(lessonQuantity);
-//                    }
+
                     bookedLessonsNew.setOwnerID(clientID);
                     lessons.addLesson(lesson);
                     session.setAttribute("lessons", lessons);
@@ -141,32 +137,34 @@ public class Controller extends HttpServlet {
                     
                 } else if (action.equals("/finaliseBooking")) {
                   LessonSelection lessons = (LessonSelection) session.getAttribute("lessons");
-                  if (lessons.getNumChosen() > 0) {
+
                     lessons.updateBooking();
-                  
+                    BookedLessons bookedLessonsFinalise = (BookedLessons) session.getAttribute("bookedLessons");
                     try {
-                        bookedLessons.getBookedLessons();
+                        bookedLessonsFinalise.getBookedLessons();
                     } catch (SQLException ex) {
                         Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
                     }
                    
-                  session.setAttribute("bookedLesson", bookedLessons);
+                  session.setAttribute("bookedLesson", bookedLessonsFinalise);
                   
                   dispatcher = this.getServletContext().getRequestDispatcher("/LessonsBookedView.jspx");
-                  }
-                  
+
                 } else if (action.equals("/viewSelectedLessons")) {
+                    LessonSelection lessons = (LessonSelection) session.getAttribute("lessons");
+                    session.setAttribute("lessons", lessons);
                     dispatcher = this.getServletContext().getRequestDispatcher("/LessonSelectionView.jspx");
                 } else if (action.equals("/lessonTimetableView")) {
                     dispatcher = this.getServletContext().getRequestDispatcher("/LessonTimetableView.jspx");
                 } else if (action.equals("/LessonsBookedView")) {
+                    BookedLessons bookedLessonsView = (BookedLessons) session.getAttribute("bookedLessons");
                     try {
-                        bookedLessons.getBookedLessons();
+                        bookedLessonsView.getBookedLessons();
                     } catch (SQLException ex) {
                         Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     
-                    session.setAttribute("bookedLesson", bookedLessons);
+                    session.setAttribute("bookedLesson", bookedLessonsView);
                     dispatcher = this.getServletContext().getRequestDispatcher("/LessonsBookedView.jspx");
                     
                 } else if (action.equals("logout")) {
