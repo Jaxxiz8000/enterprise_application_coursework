@@ -65,7 +65,6 @@
                             <td><c:out value="${bLesson.value.level}"/></td>
                             <td><input type="hidden" name="lessonID" value="${bLessons.key}"/></td>
                             <td><input type="hidden" name="lessonName" value="${bLessons.value.description}"/></td>
-                            <td><input type="submit" value="Delete lesson from booking"/></td>
                         </tr>
                     </form>
                 </c:forEach>
