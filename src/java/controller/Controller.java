@@ -5,6 +5,7 @@
 package controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.logging.Level;
@@ -61,7 +62,6 @@ public class Controller extends HttpServlet {
         RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/login.jsp");
         
         HttpSession session = request.getSession(false);
-        
         if (action.equals("/login")) {
             String user = null;
             String pwd = null;
@@ -89,6 +89,19 @@ public class Controller extends HttpServlet {
                     dispatcher = this.getServletContext().getRequestDispatcher("/LessonTimetableView.jspx");
             }
             
+        } else if (action.equals("/checkName")) {
+            
+            String username = request.getParameter("user_name");
+            String result = users.userExists(username);
+            PrintWriter out = response.getWriter();
+            try {
+                //out.write(users.toJson(result));
+                out.write(result);
+            } finally {
+                out.close();
+            }
+            
+            
         } else if (action.equals("/addUser")) {
             String newUser = null;
             String newPwd = null;
@@ -103,20 +116,7 @@ public class Controller extends HttpServlet {
             if (users.addUser(newUser, newPwd) == false) {
                 dispatcher = this.getServletContext().getRequestDispatcher("/login.jsp");
             } else {
-            clientID = users.isValid(newUser, newPwd);
-            
-            if (clientID == -1) {
-                dispatcher = this.getServletContext().getRequestDispatcher("/login.jsp");
-                //response.sendRedirect(request.getParameter("from"));
-            }else {
-                    session = request.getSession();
-                    LessonSelection selectedLesson = new LessonSelection(clientID);
-                    bookedLessons = new BookedLessons(clientID);
-                    session.setAttribute("lessons", selectedLesson);
-                    session.setAttribute("bookedLessons", bookedLessons);
-                    session.setAttribute("clientID", clientID);
-                    dispatcher = this.getServletContext().getRequestDispatcher("/LessonTimetableView.jspx");
-                }
+              dispatcher = this.getServletContext().getRequestDispatcher("/login.jsp");
             }
 
         } else if (session.getAttribute("lessons") != null) {
@@ -182,13 +182,12 @@ public class Controller extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
         }
     
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+            
     }
 
 
@@ -200,4 +199,5 @@ public class Controller extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+    
 }

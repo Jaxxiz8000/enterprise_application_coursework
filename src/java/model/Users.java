@@ -120,4 +120,37 @@ public class Users {
     public int returnClientID() {
         return clientID;
     }
+    
+    public String userExists(String username) {
+        
+                try {
+            
+            Connection connection = ds.getConnection();
+
+            if (connection != null) {
+
+               String queryString = "SELECT username FROM clients where username=?";
+               pstmt = connection.prepareStatement(queryString);
+               pstmt.setString(1, username);
+               rs = pstmt.executeQuery();
+               
+               if (rs.next()) {
+                   return "exists";
+               }else {
+                   return "available";
+               }
+            }
+            else {
+                return "Error cannot check username at this time";
+            }
+        } catch(SQLException e) {
+                    
+            System.out.println("Exception is ;"+e + ": message is " + e.getMessage());
+            return "Error exception found cannot check username at this time";
+        }
+    }
+    
+    public String toJson(String string) {
+        return "{\"checkNameResponse\": \"" + string +"}";
+    }
 }
