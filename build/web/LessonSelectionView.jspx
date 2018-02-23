@@ -31,13 +31,18 @@
                     <th>End Date</th><th>Level</th>
                 </tr>
                 <c:forEach var="lesson" items="${lessons.lessons}">
-                    <form>
+                    <form method="POST" action="http://localhost:8084/coursework/do/deleteSelectedLesson">
                         <tr>
                             <td><c:out value="${lesson.key}"/></td>
                             <td><c:out value="${lesson.value.description}"/></td>
                             <td><c:out value="${lesson.value.startTime}" /></td>
                             <td><c:out value="${lesson.value.endTime}"/></td>
                             <td><c:out value="${lesson.value.level}"/></td>
+                            <td><input type="hidden" name="lessonID" value="${lesson.key}"/></td>
+                            <td><input type="hidden" name="lessonName" value="${lesson.value.description}"/></td>
+                            <td>
+                            <input name="deleteSelectedLessonBtn" type="submit" value="Remove Selected Lesson"/>
+                            </td>
                         </tr>
                     </form>
                 </c:forEach>
