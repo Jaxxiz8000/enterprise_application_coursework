@@ -20,13 +20,12 @@
             <h1>Lesson Timetable!</h1>
             <p>Below you will see the list of FREE lessons available to the 
                 course </p>
-        
-            <table border="1">
+            <jsp:useBean class="model.LessonTimetable" id="lessonTimetable" scope="application"/>
+            <table border="1" id='activeTable'>
                 <tr>
                     <th>ID</th><th>Lesson Description</th><th>Start Date</th>
                     <th>End Date</th><th>Level</th>
                 </tr>
-                <jsp:useBean class="model.LessonTimetable" id="lessonTimetable" scope="application"/>
                 <c:forEach var="lessons" items="${lessonTimetable.lessons}">
                     <form method="POST" action="http://localhost:8084/coursework/do/chooseLesson">
                         <tr>
@@ -37,11 +36,44 @@
                             <td><c:out value="${lessons.value.level}"/></td>
                             <td><input type="hidden" name="lessonID" value="${lessons.key}"/></td>
                             <td><input type="hidden" name="lessonName" value="${lessons.value.description}"/></td>
-                            <td><input type="submit" value="Select Lesson"/></td>
+                            <td>
+                            <input name="selectLessonBtn" type="submit" value="Select Lesson"/>
+                            </td>
                         </tr>
                     </form>
                 </c:forEach>
             </table>
+            <table border="1" id='disabledTable' style="display: none">
+                <tr>
+                    <th>ID</th><th>Lesson Description</th><th>Start Date</th>
+                    <th>End Date</th><th>Level</th>
+                </tr>
+                <c:forEach var="lessons" items="${lessonTimetable.lessons}">
+                    <form method="POST" action="http://localhost:8084/coursework/do/chooseLesson">
+                        <tr>
+                            <td><c:out value="${lessons.key}"/></td>
+                            <td><c:out value="${lessons.value.description}"/></td>
+                            <td><c:out value="${lessons.value.startTime}" /></td>
+                            <td><c:out value="${lessons.value.endTime}"/></td>
+                            <td><c:out value="${lessons.value.level}"/></td>
+                            <td><input type="hidden" name="lessonID" value="${lessons.key}"/></td>
+                            <td><input type="hidden" name="lessonName" value="${lessons.value.description}"/></td>
+                            <td><input name="selectLessonBtn" disabled="disbaled" type="submit" value="Select Lesson"/></td>
+                        </tr>
+                    </form>
+                </c:forEach>
+            </table>
+            <jsp:useBean class="model.LessonSelection" id="lessons" scope="session"/>
+            <script>
+            if (${lessons.numChosen == 3}) {
+                document.getElementById("activeTable").style.display="none";
+                document.getElementById("disabledTable").style.display="";
+                
+            } else {            
+                document.getElementById("activeTable").style.display="";
+                document.getElementById("disabledTable").style.display="none";
+            }
+            </script>
         </jsp:body>
     </jsp:element>
 </jsp:root>
