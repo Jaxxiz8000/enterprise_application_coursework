@@ -135,7 +135,15 @@ public class Controller extends HttpServlet {
                     session.setAttribute("bookedLesson", bookedLessonsNew);
                     dispatcher = this.getServletContext().getRequestDispatcher("/LessonSelectionView.jspx");
                     
-                } else if (action.equals("/finaliseBooking")) {
+                } else if (action.equals("/deleteSelectedLesson")) {
+                    Lesson deleteLesson = this.availableLessons.getLesson(request.getParameter("lessonID"));
+                    LessonSelection deleteLessonSession = (LessonSelection) session.getAttribute("lessons");
+                    
+                    deleteLessonSession.deleteLesson(deleteLesson);
+                    session.setAttribute("lessons", deleteLessonSession);
+                    
+                    dispatcher = this.getServletContext().getRequestDispatcher("/LessonSelectionView.jspx");
+                }else if (action.equals("/finaliseBooking")) {
                   LessonSelection lessons = (LessonSelection) session.getAttribute("lessons");
 
                     lessons.updateBooking();

@@ -82,6 +82,10 @@ public class LessonSelection  {
     public int getNumChosen(){
         return this.chosenLessons.size();
     }
+    
+    public void deleteLesson(Lesson l) {
+        this.chosenLessons.remove(l.getId());
+    }
 
     public int getOwner() {
         return this.ownerID;
