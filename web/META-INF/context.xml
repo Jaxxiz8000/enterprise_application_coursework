@@ -5,3 +5,5 @@
     username="root" password="Sup3rS3cret88!" driverClassName="com.mysql.jdbc.Driver"
     url="jdbc:mysql://localhost:3306/sohnds_db"/>
 </Context>
+<!--    username="sohnds" password="rusk15trop" driverClassName="com.mysql.jdbc.Driver"
+    url="jdbc:mysql://sohnds.eas-dc3160-1718.aston.ac.uk/sohnds_db"/>-->

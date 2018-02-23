@@ -100,24 +100,17 @@ public class Controller extends HttpServlet {
             if(request.getParameter("newPassword") != null){
                 newPwd = request.getParameter("newPassword");
             }
-            if (users.addUser(newUser, newPwd) == false) {
+            if (users.isValid(newUser, newPwd) == -1) {
+                if (users.addUser(newUser, newPwd) == false) {
                 dispatcher = this.getServletContext().getRequestDispatcher("/login.jsp");
-            } else {
-            clientID = users.isValid(newUser, newPwd);
-            
-            if (clientID == -1) {
+                } else {
                 dispatcher = this.getServletContext().getRequestDispatcher("/login.jsp");
-                //response.sendRedirect(request.getParameter("from"));
-            }else {
-                    session = request.getSession();
-                    LessonSelection selectedLesson = new LessonSelection(clientID);
-                    bookedLessons = new BookedLessons(clientID);
-                    session.setAttribute("lessons", selectedLesson);
-                    session.setAttribute("bookedLessons", bookedLessons);
-                    session.setAttribute("clientID", clientID);
-                    dispatcher = this.getServletContext().getRequestDispatcher("/LessonTimetableView.jspx");
                 }
+            } else {
+                // Add message that can be displayed to associate else was triggered.
+                dispatcher = this.getServletContext().getRequestDispatcher("/login.jsp");
             }
+
 
         } else if (session.getAttribute("lessons") != null) {
             
