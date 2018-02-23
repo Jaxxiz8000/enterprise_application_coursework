@@ -34,9 +34,6 @@
                             <td><c:out value="${lessons.value.startTime}" /></td>
                             <td><c:out value="${lessons.value.endTime}"/></td>
                             <td><c:out value="${lessons.value.level}"/></td>
-                            <td><input type="hidden" name="lessonID" value="${lessons.key}"/></td>
-                            <td><input type="hidden" name="lessonName" value="${lessons.value.description}"/></td>
-                            <td><input type="submit" value="Cancel Lesson booking"/></td>
                         </tr>
                     </form>
                 </c:forEach>
